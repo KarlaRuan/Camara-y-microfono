@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<video id="video" autoplay>
+	
+	</video>
+	<select id="camera-selector">
+		
+	</select>
+</body>
+	<script>
+		let video=document.getElementById('video');	
+		let selectTag=document.getElementById('camera-selector');
+	
+		navigator.mediaDevices.enumerateDevices().then(devices=>{
+			devices.forEach(device=>{
+				if(device.kind != "videoinput") return;
+
+				let optionTag=document.createElement("option");
+				optionTag.innerHTML=device.label;
+				optionTag.value=device.deviceId;
+
+				selectTag.appendChild(optionTag);
+			})
+		})
+		selectTag.addEventListener("change",function(ev){
+			let deviceId=this.options[this.selectedIndex].value; //Devuelve la opcion se que haya seleccionado
+
+			star(deviceId);
+		})
+
+		function start(deviceId=undefined){
+			const constraints={
+				video:{
+					deviceId:deviceId
+				}
+			}
+			navigator.mediaDevices.getUserMedia(constraints)
+				.then(stream =>{
+					video.srcObject=stream;
+				})
+				.catch(err=>console.log(err))
+		}
+
+		start();
+
+	</script>
+</html>
