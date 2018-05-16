@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<video id="video" autoplay>
+		
+	</video>
+</body>
+	<script>
+		let video=document.getElementById('video');	
+		navigator.mediaDevices.getUserMedia({video:true, audio:true}) //Metodo para obtener permisos de la computadora (camara o microfono)
+			.then(stream =>{
+				video.srcObject=stream;
+			})
+			.catch(err=>console.log(err))
+	</script>
+</html>
