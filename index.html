@@ -10,7 +10,31 @@
 </body>
 	<script>
 		let video=document.getElementById('video');	
-		navigator.mediaDevices.getUserMedia({video:true, audio:true}) //Metodo para obtener permisos de la computadora (camara o microfono)
+		//mediaTrackConstraints------Configuraciones
+		//Valores dobles, ya sea de ideal y exacto o numerico
+		/*AUDIO
+			channelCount ==>{ideal:10,exact:10}
+			latency
+			SampleRate
+			Volume
+		  VIDEO
+			aspectRatio: {}
+			width: {}
+			height:{}
+			frameRate: {}
+			facingMode: "user" camara frontal o "environment" del medio ambiente camara trasera
+		*/
+		const constraints{
+			audio:{
+				echoCancellation: true;
+			}
+			video:{
+				frameRate: {ideal:10},
+				facingMode: "user"
+			}
+		}
+		//navigator.mediaDevices.getUserMedia({video:true, audio:true}) //Metodo para obtener permisos de la computadora (camara o microfono)
+		navigator.mediaDevices.getUserMedia(constraints)
 			.then(stream =>{
 				video.srcObject=stream;
 			})
