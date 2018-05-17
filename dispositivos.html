@@ -19,9 +19,16 @@
 		let video=document.getElementById('video');	
 		let selectTag=document.getElementById('camera-selector');
 		let canvas=document.getElementById('canvas');
+		let lentes=new Image();
+		let imageLoaded=false;
 		const context=canvas.getContext('2d');
 		const ctracker=new clm.tracker();
 		ctracker.init(pModel);
+
+		lentes.src="lentes.png";
+		lentes.onload=function(){ //una vez que se cargó la imagen se vuelve verdadero para usarla
+			imageLoaded=true;
+		}
 	
 		navigator.mediaDevices.enumerateDevices().then(devices=>{
 			devices.forEach(device=>{
@@ -51,17 +58,36 @@
 					video.srcObject=stream;
 					setTimeout(function(){
 						ctracker.start(video);
+						requestAnimationFrame(loop);
 					},500);
 				})
 				.catch(err=>console.log(err))
+		}
+		function drawImageRealTime(image,positions){
+			console.log(positions);
 		}
 		function loop(){ //Se ejecuta en cada fotograma, se usa requestAnimationFrame para
 			//que se actualize la imagen del canvas y funcione como el video.
 			context.drawImage(video,0,0,800,600);
 			ctracker.draw(canvas);
+
+			let positions=ctracker.getCurrentPosition();
+
+			if(imageLoaded)
+				drawImageRealTime(lentes,{ //Coordenadas en donde se va a dibujar
+					x:{
+						init: positions[0],
+						final: positions[14]
+					},
+					y:{
+						init: positions[33] ,
+						final: positions[41]
+					}
+				})
+
 			requestAnimationFrame(loop);
 		}
-		requestAnimationFrame(loop);
+		
 		start();
 
 	</script>
