@@ -4,8 +4,9 @@
 	<title></title>
 </head>
 <body>
-	<video id="video" autoplay>
-	
+	<canvas id="canvas" width="800" height="600"></canvas>
+	<video id="video" autoplay style="display:none;">
+
 	</video>
 	<select id="camera-selector">
 		
@@ -14,6 +15,8 @@
 	<script>
 		let video=document.getElementById('video');	
 		let selectTag=document.getElementById('camera-selector');
+		let canvas=document.getElementById('canvas');
+		const context=canvas.getContext('2d');
 	
 		navigator.mediaDevices.enumerateDevices().then(devices=>{
 			devices.forEach(device=>{
@@ -44,7 +47,12 @@
 				})
 				.catch(err=>console.log(err))
 		}
+		function loop(){ //Se ejecuta en cada fotograma
+			context.drawImage(video,0,0,800,600);
 
+			requestAnimationFrame(loop);
+		}
+		requestAnimationFrame(loop);
 		start();
 
 	</script>
