@@ -5,18 +5,23 @@
 </head>
 <body>
 	<canvas id="canvas" width="800" height="600"></canvas>
-	<video id="video" autoplay style="display:none;">
+	<video id="video" autoplay style="display:none;" width="800" height="600">
 
 	</video>
 	<select id="camera-selector">
 		
 	</select>
 </body>
+	<script src="clmtrackr-gh-pages/build/clmtrackr.js"></script>
+	<script src="clmtrackr-gh-pages/models/model_pca_20_svm.js"></script>
+
 	<script>
 		let video=document.getElementById('video');	
 		let selectTag=document.getElementById('camera-selector');
 		let canvas=document.getElementById('canvas');
 		const context=canvas.getContext('2d');
+		const ctracker=new clm.tracker();
+		ctracker.init(pModel);
 	
 		navigator.mediaDevices.enumerateDevices().then(devices=>{
 			devices.forEach(device=>{
@@ -44,12 +49,16 @@
 			navigator.mediaDevices.getUserMedia(constraints)
 				.then(stream =>{
 					video.srcObject=stream;
+					setTimeout(function(){
+						ctracker.start(video);
+					},500);
 				})
 				.catch(err=>console.log(err))
 		}
-		function loop(){ //Se ejecuta en cada fotograma
+		function loop(){ //Se ejecuta en cada fotograma, se usa requestAnimationFrame para
+			//que se actualize la imagen del canvas y funcione como el video.
 			context.drawImage(video,0,0,800,600);
-
+			ctracker.draw(canvas);
 			requestAnimationFrame(loop);
 		}
 		requestAnimationFrame(loop);
