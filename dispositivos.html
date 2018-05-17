@@ -65,6 +65,14 @@
 		}
 		function drawImageRealTime(image,positions){
 			console.log(positions);
+
+			const width=positions.x.final[0]-positions.x.init[0];
+			const height=positions.y.final[1]-positions.y.init[1];
+
+			context.drawImage(image,positions.x.init[0],
+									positions.y.init[1],
+									width,
+									height);
 		}
 		function loop(){ //Se ejecuta en cada fotograma, se usa requestAnimationFrame para
 			//que se actualize la imagen del canvas y funcione como el video.
@@ -87,7 +95,6 @@
 
 			requestAnimationFrame(loop);
 		}
-		
 		start();
 
 	</script>
